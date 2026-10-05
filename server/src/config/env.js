@@ -5,6 +5,15 @@ export const config = {
 
   mongoUri: process.env.MONGODB_URI,
 
+  jwtSecret: process.env.JWT_SECRET,
+
+  jwtExpiresIn: process.env.JWT_EXPIRES_IN || '7d',
+
+  clientUrls: (process.env.CLIENT_URLS || 'http://localhost:5173')
+    .split(',')
+    .map((url) => url.trim())
+    .filter(Boolean),
+
   ai: {
     provider: process.env.AI_PROVIDER,
     model: process.env.AI_MODEL,
@@ -14,6 +23,7 @@ export const config = {
 
 export function isAiConfigured() {
   return Boolean(
-    config.ai.apiKey && config.ai.model
+    config.ai.apiKey &&
+    config.ai.model
   );
 }
