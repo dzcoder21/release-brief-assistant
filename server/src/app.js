@@ -10,16 +10,29 @@ import { errorHandler, notFound } from './middleware/error.js';
 const app = express();
 
 app.disable('x-powered-by');
-app.use(helmet());
+
 app.use(
   cors({
-    origin: (origin, cb) => (!origin || config.clientUrls.includes(origin) ? cb(null, true) : cb(new Error('Not allowed by CORS'))),
+    origin: [
+      'http://localhost:5173',
+      'https://release-brief-assistant-six.vercel.app',
+    ],
+    credentials: true,
+    methods: ['GET', 'POST', 'PUT', 'DELETE', 'PATCH', 'OPTIONS'],
+    allowedHeaders: ['Content-Type', 'Authorization'],
   })
 );
+
+app.use(helmet());
+
 app.use(express.json({ limit: '1mb' }));
+
 app.use(sanitize);
+
 app.use('/api', apiLimiter, routes);
+
 app.use(notFound);
+
 app.use(errorHandler);
 
 export default app;
